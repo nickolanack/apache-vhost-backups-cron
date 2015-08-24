@@ -28,7 +28,7 @@ body {
 }
 
 body:before {
-	content: "Apache Log Monitor";
+	content: "Apache Host Backups";
 	position: absolute;
 	top: 19px;
 	left: 40px;
@@ -54,6 +54,10 @@ body>div {
 	padding: 10px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	overflow-wrap: break-word;
+}
+
+p.author {
+	display: none;
 }
 </style>
 <?php
@@ -81,14 +85,17 @@ body>div {
                                     
                                     return false;
                                 });
-                            
+                            ?><ul><?php
                             foreach ($files as $p) {
-                                
-                                echo $p . "<br/>";
+                                ?><li><?php
+                                echo $p?></li><?php
                             }
+                            ?></ul><?php
                         }
                     ),
-                    'footer' => 'copyright Nick Blackwell ' . date('Y')
+                    'footer' => function () {
+                        HTML('license.mit');
+                    }
                 ));
         }
     ));
