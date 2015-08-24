@@ -4,12 +4,14 @@
  * simple html page to display backup files, and allow downloads.
  * this should be proctected by basic auth.
  */
+require __DIR__ . '/vendor/autoload.php';
+
 $dir = dirname(__DIR__);
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 
-foreach (array_filter(scandir(), 
+$files = array_filter(scandir(), 
     function ($file) use($dir) {
         
         if (is_file($dir . DS . $file)) {
@@ -17,6 +19,11 @@ foreach (array_filter(scandir(),
         }
         
         return false;
-    }) as $p) {}
+    });
+
+foreach ($files as $p) {
+    
+    echo $p;
+}
 
 
