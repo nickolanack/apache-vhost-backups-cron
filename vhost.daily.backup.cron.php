@@ -76,6 +76,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
             $config = json_decode(file_get_contents($configPath));
             
             chdir(dirname($vhostRoot));
+            echo '   # (cd ' . getcwd() . ')';
             $zipPrefix = 'host_backup_';
             $zip = $zipPrefix . date('Y-M-D H:i') . '.zip';
             $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
