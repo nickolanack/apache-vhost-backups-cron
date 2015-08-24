@@ -14,7 +14,7 @@ function shell_exec_($cmd) {
 
     global $dryrun;
     if ($dryrun) {
-        echo '   #' . $cmd . "\n";
+        echo '   # ' . $cmd . "\n";
     } else {
         shell_exec($cmd);
     }
@@ -23,7 +23,7 @@ function shell_exec_($cmd) {
 function rollBackups($name, $num = 2) {
 
     $lsBackupsCmd = 'ls -tU1 ' . $name;
-    echo $lsBackupsCmd . "\n";
+    echo '   # ' . $lsBackupsCmd . "\n";
     $roll = explode("\n", trim(shell_exec($lsBackupsCmd)));
     
     if (count($roll) == 1 && stripos($roll[0], 'No such file or directory') !== false) {
@@ -52,7 +52,7 @@ function rollBackups($name, $num = 2) {
 }
 
 $lsVhostsCmd = 'ls -1 ' . $webRoot;
-echo $lsVhostsCmd . "\n";
+echo '# ' . $lsVhostsCmd . "\n";
 $vhostDocumentRoots = explode("\n", trim(shell_exec($lsVhostsCmd)));
 echo 'Scanning ' . count($vhostDocumentRoots) . ' Vhosts' . "\n";
 $countNoConfigs = 0;
