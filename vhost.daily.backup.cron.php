@@ -82,7 +82,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
             chdir($vhostRoot);
             echo '   # (cd ' . getcwd() . ')';
             $zipPrefix = 'host_backup_';
-            $dateStr = date('Y-M-D_H:i');
+            $dateStr = date('Y-M-D H:i');
             
             $zip = $zipPrefix . $dateStr . '.zip';
             $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
@@ -111,7 +111,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
                 if (is_string($db)) {
                     $sqlPrefix = 'db_backup_';
                     $sql = $sqlPrefix . $dateStr . '.sql';
-                    $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellcmd($sql);
+                    $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellarg($sql);
                     echo '   dumping database `' . $db . '` -> ' . $sql . "\n";
                     shell_exec_($dbCmd);
                     
