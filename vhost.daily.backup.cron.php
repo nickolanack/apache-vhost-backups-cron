@@ -32,7 +32,9 @@ function rollBackups($name, $num = 2) {
     }
 }
 
-$vhostDocumentRoots = explode("\n", trim(shell_exec_('ls -tC1 ' . ($webRoot))));
+$lsVhostsCmd = 'ls -tC1 ' . $webRoot;
+
+$vhostDocumentRoots = explode("\n", trim(shell_exec_($lsVhostsCmd)));
 print_r($vhostDocumentRoots);
 $countNoConfigs = 0;
 foreach ($vhostDocumentRoots as $vhostRoot) {
