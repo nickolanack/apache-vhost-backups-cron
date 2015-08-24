@@ -112,6 +112,10 @@ article>div, article h1 {
 	font-weight: 100;
 	margin: 50px;
 }
+
+td {
+	padding-right: 50px;
+}
 </style>
 <?php
         },
@@ -141,11 +145,11 @@ article>div, article h1 {
 	<tbody><?php
                             foreach ($files as $file) {
                                 ?><tr>
+			<td> <?php echo date('Y-m-d H:s:i', filectime($dir . DS . $file)); ?></td>
+			<td> <?php echo formatBytes(filesize($dir . DS . $file)); ?></td>
 			<td><a href="?download=<?php echo urlencode($file); ?> "
 				target="_blank"><?php
                                 echo $file?></a></td>
-			<td> <?php echo date('Y-m-d H:s:i', filectime($dir . DS . $file)); ?></td>
-			<td> <?php echo formatBytes(filesize($dir . DS . $file)); ?></td>
 		</tr><?php
                             }
                             ?></tbody>
