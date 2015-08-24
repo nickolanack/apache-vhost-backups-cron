@@ -19,7 +19,7 @@ function shell_exec_($cmd) {
 
 function rollBackups($name, $num = 2) {
 
-    $lsBackupsCmd = 'ls -tUC1 ' . $name;
+    $lsBackupsCmd = 'ls -tU1 ' . $name;
     echo $lsBackupsCmd;
     $roll = explode("\n", trim(shell_exec($lsBackupsCmd)));
     
@@ -34,7 +34,7 @@ function rollBackups($name, $num = 2) {
     }
 }
 
-$lsVhostsCmd = 'ls -tC1 ' . $webRoot;
+$lsVhostsCmd = 'ls -1 ' . $webRoot;
 echo $lsVhostsCmd;
 $vhostDocumentRoots = explode("\n", trim(shell_exec($lsVhostsCmd)));
 print_r($vhostDocumentRoots);
