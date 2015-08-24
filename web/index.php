@@ -21,16 +21,17 @@ $files = array_filter(scandir($dir),
     });
 
 if (key_exists('download', $_GET) && in_array($_GET['download'], $files)) {
-    $file = $dir . DS . $_GET['download'];
+    $filename = $_GET['download'];
+    $file = $dir . DS . $filename;
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $info = finfo_file($finfo, $file);
     // die(print_r($info, true));
     
     header('Content-Type: ' . trim($info));
-    header('Content-Disposition: attachment; filename=' . addcslashes($file, '"\\'));
-    header('Content-Length: ' . filesize($dir . DS . $file));
+    header('Content-Disposition: attachment; filename=' . addcslashes($filename, '"\\'));
+    header('Content-Length: ' . filesize($file));
     
-    readfile($dir . DS . $file);
+    readfile($file);
     return;
 }
 usort($files, function ($a, $b) use($dir) {
