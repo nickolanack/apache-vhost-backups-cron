@@ -136,7 +136,7 @@ article>div, article h1 {
                             foreach ($files as $file) {
                                 ?><li><a
 		href="?download=<?php echo urlencode($file); ?> " target="_blank"><?php
-                                echo $file?></a> | <?php echo date('Y-m-d H:s:i', strtotime(filectime($dir . DS . $file))); ?> | <?php echo formatBytes(filesize($dir . DS . $file)); ?></li><?php
+                                echo $file?></a> | <?php echo date('Y-m-d H:s:i', filectime($dir . DS . $file)); ?> | <?php echo formatBytes(filesize($dir . DS . $file)); ?></li><?php
                             }
                             ?></ul><?php
                         }
