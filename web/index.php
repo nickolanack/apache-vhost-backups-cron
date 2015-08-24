@@ -11,7 +11,7 @@ if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 
-$files = array_filter(scandir(), 
+$files = array_filter(scandir($dir), 
     function ($file) use($dir) {
         
         if (is_file($dir . DS . $file)) {
