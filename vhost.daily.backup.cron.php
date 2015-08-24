@@ -23,11 +23,11 @@ function shell_exec_($cmd) {
 function rollBackups($name, $num = 2) {
 
     $lsBackupsCmd = 'ls -tU1 ' . $name;
-    echo $lsBackupsCmd;
+    echo $lsBackupsCmd . "\n";
     $roll = explode("\n", trim(shell_exec($lsBackupsCmd)));
     
     if (count($roll) == 1 && stripos($roll[0], 'No such file or directory') !== false) {
-        echo $roll[0];
+        echo $roll[0] . "\n";
         return;
     }
     
@@ -52,9 +52,9 @@ function rollBackups($name, $num = 2) {
 }
 
 $lsVhostsCmd = 'ls -1 ' . $webRoot;
-echo $lsVhostsCmd;
+echo $lsVhostsCmd . "\n";
 $vhostDocumentRoots = explode("\n", trim(shell_exec($lsVhostsCmd)));
-echo 'Scanning ' . count($vhostDocumentRoots) . ' Vhosts';
+echo 'Scanning ' . count($vhostDocumentRoots) . ' Vhosts' . "\n";
 $countNoConfigs = 0;
 foreach ($vhostDocumentRoots as $vhostRoot) {
     
@@ -65,7 +65,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
     if (file_exists($documentRoot) && is_dir($documentRoot)) {
         if (file_exists($configPath)) {
             
-            echo '   ' . $vhostRoot . ":";
+            echo '   ' . $vhostRoot . ":" . "\n";
             
             $config = json_decode(file_get_contents($configPath));
             
@@ -74,7 +74,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
             $zip = $zipPrefix . date('Y-M-D H:i') . '.zip';
             $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
             
-            echo '   archiving folder `' . $webDir . '` -> ' . $zip;
+            echo '   archiving folder `' . $webDir . '` -> ' . $zip . "\n";
             shell_exec_($zipCmd);
             
             rollBackups($vhostRoot . '/' . $zipPrefix . '*', 2);
@@ -85,7 +85,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
                     $sqlPrefix = 'db_backup_';
                     $sql = $sqlPrefix . date('Y-M-D H:i') . '.sql';
                     $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellcmd($sql);
-                    echo '   dumping database `' . $db . '` -> ' . $sql;
+                    echo '   dumping database `' . $db . '` -> ' . $sql . "\n";
                     shell_exec_($dbCmd);
                     
                     rollBackups($vhostRoot . '/' . $sqlPrefix . '*', 2);
@@ -98,6 +98,6 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
 }
 
 if ($countNoConfigs === count($vhostDocumentRoots)) {
-    echo 'Did not find any backup.json files';
+    echo 'Did not find any backup.json files' . "\n";
 }
 
