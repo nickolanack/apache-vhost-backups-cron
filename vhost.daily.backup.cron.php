@@ -5,7 +5,7 @@ $webDir = 'http';
 $configFile = 'backup.json';
 
 global $dryrun;
-$dryrun = true;
+$dryrun = false;
 
 global $dryroll;
 $dryroll = true;
@@ -44,8 +44,12 @@ function rollBackups($name, $num = 2) {
     
     if (count($roll) > $num) {
         foreach (array_slice($roll, $num) as $old) {
-            $rmCmd = 'rm \'' . $old . '\' -r -f';
-            shell_exec_($rmCmd);
+            $rmCmd = '   # rm \'' . $old . '\' -r -f';
+            
+            // shell_exec_($rmCmd);
+            if ($dryrun) {
+                echo '   - dryrun' . "\n";
+            }
         }
     }
     $dryrun = $dryrunTemp;
