@@ -33,30 +33,40 @@ function rollBackups($name, $num = 2) {
 }
 
 $vhostDocumentRoots = explode("\n", trim(shell_exec_('ls -tC1 ' . ($webRoot))));
+print_r($vhostDocumentRoots);
+$countNoConfigs = 0;
 foreach ($vhostDocumentRoots as $vhostRoot) {
     
     $vhostRoot = $webRoot . trim($vhostRoot);
     $documentRoot = $vhostRoot . '/' . $webDir;
     $configPath = $vhostRoot . '/' . $configFile;
     
-    if (file_exists($documentRoot) && is_dir($documentRoot) && file_exists($configPath)) {
-        $config = json_decode(file_get_contents($configPath));
-        
-        chdir(dirname($vhostRoot));
-        $zip = 'host_backup_' . date('Y-M-D H:i') . '.zip';
-        $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
-        
-        shell_exec_($zipCmd);
-        
-        if (key_exists('database', $config)) {
-            $db = $config->database;
-            if (is_string($db)) {
-                
-                $sql = 'db_backup_' . date('Y-M-D H:i') . '.sql';
-                $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellcmd($sql);
-                shell_exec_($dbCmd);
+    if (file_exists($documentRoot) && is_dir($documentRoot)) {
+        if (file_exists($configPath)) {
+            $config = json_decode(file_get_contents($configPath));
+            
+            chdir(dirname($vhostRoot));
+            $zip = 'host_backup_' . date('Y-M-D H:i') . '.zip';
+            $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
+            
+            shell_exec_($zipCmd);
+            
+            if (key_exists('database', $config)) {
+                $db = $config->database;
+                if (is_string($db)) {
+                    
+                    $sql = 'db_backup_' . date('Y-M-D H:i') . '.sql';
+                    $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellcmd($sql);
+                    shell_exec_($dbCmd);
+                }
             }
+        } else {
+            $countNoConfigs ++;
         }
     }
+}
+
+if ($countNoConfigs === count($vhostDocumentRoots)) {
+    echo 'Did not find any backup.json files';
 }
 
