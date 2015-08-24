@@ -54,7 +54,7 @@ function rollBackups($name, $num = 2) {
 $lsVhostsCmd = 'ls -1 ' . $webRoot;
 echo $lsVhostsCmd;
 $vhostDocumentRoots = explode("\n", trim(shell_exec($lsVhostsCmd)));
-print_r($vhostDocumentRoots);
+echo 'Scanning ' . count($vhostDocumentRoots) . ' Vhosts';
 $countNoConfigs = 0;
 foreach ($vhostDocumentRoots as $vhostRoot) {
     
@@ -64,6 +64,9 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
     
     if (file_exists($documentRoot) && is_dir($documentRoot)) {
         if (file_exists($configPath)) {
+            
+            echo '   ' . $vhostRoot . ":";
+            
             $config = json_decode(file_get_contents($configPath));
             
             chdir(dirname($vhostRoot));
@@ -71,6 +74,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
             $zip = $zipPrefix . date('Y-M-D H:i') . '.zip';
             $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
             
+            echo '   archiving folder `' . $webDir . '` -> ' . $zip;
             shell_exec_($zipCmd);
             
             rollBackups($vhostRoot . '/' . $zipPrefix . '*', 2);
@@ -81,6 +85,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
                     $sqlPrefix = 'db_backup_';
                     $sql = $sqlPrefix . date('Y-M-D H:i') . '.sql';
                     $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellcmd($sql);
+                    echo '   dumping database `' . $db . '` -> ' . $sql;
                     shell_exec_($dbCmd);
                     
                     rollBackups($vhostRoot . '/' . $sqlPrefix . '*', 2);
