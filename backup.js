@@ -1,3 +1,4 @@
 {
-	"database":"website_db"
+	"database":"website_db",
+	"exclude":"*.git*"
 }

@@ -78,8 +78,20 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
             chdir($vhostRoot);
             echo '   # (cd ' . getcwd() . ')';
             $zipPrefix = 'host_backup_';
-            $zip = $zipPrefix . date('Y-M-D H:i') . '.zip';
+            $dateStr = date('Y-M-D_H:i');
+            
+            $zip = $zipPrefix . $dateStr . '.zip';
             $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
+            
+            if (key_exists('exclude', $config)) {
+                $exclude = $config->exclude;
+                if (is_array($exclude)) {
+                    $exclude = implode(' ', $exclude);
+                }
+                if (is_string($exclude)) {
+                    $zipCmd .= ' -x ' . $exclude;
+                }
+            }
             
             echo '   archiving folder `' . $webDir . '` -> ' . $zip . "\n";
             shell_exec_($zipCmd);
@@ -91,7 +103,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
                 $db = $config->database;
                 if (is_string($db)) {
                     $sqlPrefix = 'db_backup_';
-                    $sql = $sqlPrefix . date('Y-M-D H:i') . '.sql';
+                    $sql = $sqlPrefix . $dateStr . '.sql';
                     $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellcmd($sql);
                     echo '   dumping database `' . $db . '` -> ' . $sql . "\n";
                     shell_exec_($dbCmd);
