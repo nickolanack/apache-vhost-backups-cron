@@ -1,4 +1,29 @@
 <?php
+$dir = dirname(__DIR__);
+
+if (!defined('DS')) {
+    define('DS', DIRECTORY_SEPARATOR);
+}
+
+$files = array_filter(scandir($dir), 
+    function ($file) use($dir) {
+        
+        if (is_file($dir . DS . $file)) {
+            return true;
+        }
+        
+        return false;
+    });
+
+if (key_exists($_GET, 'download') && in_array($_GET['download'], $files)) {
+    $file = $dir . DS . $_GET['download'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $info = finfo_file($finfo, $file);
+    die(print_r($info, true));
+    header('Content-Type: image/png;');
+    readfile($file);
+    return;
+}
 
 /**
  * simple html page to display backup files, and allow downloads.
@@ -59,6 +84,21 @@ body>div {
 p.author {
 	display: none;
 }
+
+footer {
+	color: steelblue;
+	font-style: italic;
+	font-size: 9px;
+	position: absolute;
+	bottom: 0;
+	margin: 0 10px;
+}
+
+article>div, article h1 {
+	font-family: sans-serif;
+	font-weight: 100;
+	margin: 50px;
+}
 </style>
 <?php
         },
@@ -82,25 +122,12 @@ p.author {
                     'authorLink' => 'https://people.ok.ubc.ca/nblackwe',
                     'title' => 'Backup Files',
                     'text' => array(
-                        function () {
-                            $dir = dirname(__DIR__);
-                            if (!defined('DS')) {
-                                define('DS', DIRECTORY_SEPARATOR);
-                            }
+                        function () use($dir, $files) {
                             
-                            $files = array_filter(scandir($dir), 
-                                function ($file) use($dir) {
-                                    
-                                    if (is_file($dir . DS . $file)) {
-                                        return true;
-                                    }
-                                    
-                                    return false;
-                                });
                             ?><ul><?php
                             foreach ($files as $file) {
                                 ?><li><a href="?download="
-		<?php echo $file; ?>><?php
+		<?php echo $file; ?> target="_blank"><?php
                                 echo $file?></a> | <?php echo date('Y-m-d H:s:i', strtotime(filectime($dir . DS . $file))); ?> | <?php echo formatBytes(filesize($dir . DS . $file)); ?></li><?php
                             }
                             ?></ul><?php
