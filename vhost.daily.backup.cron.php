@@ -56,6 +56,7 @@ echo '# ' . $lsVhostsCmd . "\n";
 $vhostDocumentRoots = explode("\n", trim(shell_exec($lsVhostsCmd)));
 echo 'Scanning ' . count($vhostDocumentRoots) . ' Vhosts' . "\n";
 $countNoConfigs = 0;
+$countTasks = 0;
 foreach ($vhostDocumentRoots as $vhostRoot) {
     
     $vhostRoot = $webRoot . trim($vhostRoot);
@@ -93,6 +94,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
                     rollBackups($vhostRoot . '/' . $sqlPrefix . '*', 2);
                 }
             }
+            $countTasks ++;
         } else {
             $countNoConfigs ++;
         }
@@ -102,6 +104,6 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
 if ($countNoConfigs === count($vhostDocumentRoots)) {
     echo 'Did not find any backup.json files' . "\n";
 } else {
-    echo 'Done' . "\n";
+    echo 'Done, backed up ' . $countTasks . ' vhost', ($countTasks == 1 ? '' : 's') . "\n";
 }
 
