@@ -14,7 +14,7 @@ function shell_exec_($cmd) {
 
     global $dryrun;
     if ($dryrun) {
-        echo $cmd . "\n";
+        echo '   #' . $cmd . "\n";
     } else {
         shell_exec($cmd);
     }
@@ -77,6 +77,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
             echo '   archiving folder `' . $webDir . '` -> ' . $zip . "\n";
             shell_exec_($zipCmd);
             
+            echo '   rolling backups like:  `' . $zipPrefix . '*' . '`' . "\n";
             rollBackups($vhostRoot . '/' . $zipPrefix . '*', 2);
             
             if (key_exists('database', $config)) {
@@ -88,6 +89,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
                     echo '   dumping database `' . $db . '` -> ' . $sql . "\n";
                     shell_exec_($dbCmd);
                     
+                    echo '   rolling backups like:  `' . $sqlPrefix . '*' . '`' . "\n";
                     rollBackups($vhostRoot . '/' . $sqlPrefix . '*', 2);
                 }
             }
