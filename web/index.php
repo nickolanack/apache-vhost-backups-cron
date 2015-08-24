@@ -63,6 +63,18 @@ p.author {
 <?php
         },
         'body' => function () {
+
+            function formatBytes($bytes, $precision = 2) {
+
+                $unit = [
+                    "B",
+                    "KB",
+                    "MB",
+                    "GB"
+                ];
+                $exp = floor(log($bytes, 1024)) | 0;
+                return round($bytes / (pow(1024, $exp)), $precision) . $unit[$exp];
+            }
             
             HTML('article', 
                 array(
@@ -86,9 +98,10 @@ p.author {
                                     return false;
                                 });
                             ?><ul><?php
-                            foreach ($files as $p) {
-                                ?><li><?php
-                                echo $p?></li><?php
+                            foreach ($files as $file) {
+                                ?><li><a href="?download="
+		<?php echo $file; ?>><?php
+                                echo $file?></a> | <?php echo date('Y-m-d H:s:i', strtotime(filectime($dir . DS . $file))); ?> | <?php echo formatBytes(filesize($dir . DS . $file)); ?></li><?php
                             }
                             ?></ul><?php
                         }
