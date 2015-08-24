@@ -1,0 +1,13 @@
+{
+    "name": "nickolanack/apache-backup-webviewer",
+    "description": "displays apache vhost backup files from apache-vhost-backups-cron as a webpage",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nick Blackwell",
+            "email": "nickblackwell82@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

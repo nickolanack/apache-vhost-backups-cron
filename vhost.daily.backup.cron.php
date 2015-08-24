@@ -80,7 +80,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
             }
             
             chdir($vhostRoot);
-            echo '   # (cd ' . getcwd() . ')';
+            echo '   # (cd ' . getcwd() . ')' . "\n";
             $zipPrefix = 'host_backup_';
             $dateStr = date('Y-M-D H:i');
             
