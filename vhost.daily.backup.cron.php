@@ -32,14 +32,14 @@ function rollBackups($name, $num = 2) {
     }
 }
 
-$vhostDocumentRoots = explode("\n", trim(shell_exec_('ls ' . ($webRoot))));
+$vhostDocumentRoots = explode("\n", trim(shell_exec_('ls -tC1 ' . ($webRoot))));
 foreach ($vhostDocumentRoots as $vhostRoot) {
     
     $vhostRoot = $webRoot . trim($vhostRoot);
     $documentRoot = $vhostRoot . '/' . $webDir;
     $configPath = $vhostRoot . '/' . $configFile;
     
-    if (file_exists($documentRoot) && file_exists($configPath)) {
+    if (file_exists($documentRoot) && is_dir($documentRoot) && file_exists($configPath)) {
         $config = json_decode(file_get_contents($configPath));
         
         chdir(dirname($vhostRoot));
