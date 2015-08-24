@@ -15,7 +15,7 @@ $files = array_filter(scandir($dir),
         return false;
     });
 
-if (key_exists($_GET, 'download') && in_array($_GET['download'], $files)) {
+if (key_exists('download', $_GET) && in_array($_GET['download'], $files)) {
     $file = $dir . DS . $_GET['download'];
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $info = finfo_file($finfo, $file);
