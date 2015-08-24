@@ -19,7 +19,9 @@ function shell_exec_($cmd) {
 
 function rollBackups($name, $num = 2) {
 
-    $roll = explode("\n", trim(shell_exec_('ls -tUC1 ' . $name)));
+    $lsBackupsCmd = 'ls -tUC1 ' . $name;
+    echo $lsBackupsCmd;
+    $roll = explode("\n", trim(shell_exec($lsBackupsCmd)));
     
     usort($roll, function ($a, $b) {
         return filectime($b) - filectime($a);
