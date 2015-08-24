@@ -23,6 +23,11 @@ function rollBackups($name, $num = 2) {
     echo $lsBackupsCmd;
     $roll = explode("\n", trim(shell_exec($lsBackupsCmd)));
     
+    if (count($roll) == 1 && stripos($roll[0], 'No such file or directory') !== false) {
+        echo $roll[0];
+        return;
+    }
+    
     usort($roll, function ($a, $b) {
         return filectime($b) - filectime($a);
     });
