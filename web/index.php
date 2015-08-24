@@ -9,7 +9,12 @@ $files = array_filter(scandir($dir),
     function ($file) use($dir) {
         
         if (is_file($dir . DS . $file)) {
-            return true;
+            if (stripos($file, '.zip') !== false) {
+                return true;
+            }
+            if (stripos($file, '.sql') !== false) {
+                return true;
+            }
         }
         
         return false;
@@ -24,6 +29,9 @@ if (key_exists('download', $_GET) && in_array($_GET['download'], $files)) {
     readfile($file);
     return;
 }
+usort($files, function ($a, $b) use($dir) {
+    return filectime($dir . DS . $a) - filectime($dir . DS . $b);
+});
 
 /**
  * simple html page to display backup files, and allow downloads.
