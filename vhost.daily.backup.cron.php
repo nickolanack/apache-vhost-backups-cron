@@ -27,7 +27,7 @@ function rollBackups($name, $num = 2) {
     $roll = explode("\n", trim(shell_exec($lsBackupsCmd)));
     
     if (count($roll) == 1 && stripos($roll[0], 'No such file or directory') !== false) {
-        echo $roll[0] . "\n";
+        echo '   - ' . $roll[0] . "\n";
         return;
     }
     
@@ -101,5 +101,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
 
 if ($countNoConfigs === count($vhostDocumentRoots)) {
     echo 'Did not find any backup.json files' . "\n";
+} else {
+    echo 'Done' . "\n";
 }
 
