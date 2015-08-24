@@ -30,7 +30,7 @@ if (key_exists('download', $_GET) && in_array($_GET['download'], $files)) {
     header('Content-Disposition: attachment; filename=' . addcslashes($file, '"\\'));
     header('Content-Length: ' . filesize($dir . DS . $file));
     
-    readfile($file);
+    readfile($dir . DS . $file);
     return;
 }
 usort($files, function ($a, $b) use($dir) {
