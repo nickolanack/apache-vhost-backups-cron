@@ -49,7 +49,7 @@ function rollBackups($name, $num = 2) {
             
             // shell_exec_($rmCmd);
             if ($dryrun) {
-                echo '   - dryrun' . "\n";
+                echo '   - dryrun' . $rmCmd . "\n";
             }
         }
     }
