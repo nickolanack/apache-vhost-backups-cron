@@ -74,6 +74,10 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
             echo '   ' . $vhostRoot . ":" . "\n";
             
             $config = json_decode(file_get_contents($configPath));
+            if (!is_object($config)) {
+                echo 'Unable to read: ' . $configPath . "\n";
+                continue;
+            }
             
             chdir($vhostRoot);
             echo '   # (cd ' . getcwd() . ')';
