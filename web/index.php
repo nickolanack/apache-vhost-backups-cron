@@ -102,7 +102,7 @@ article>div, article h1 {
 </style>
 <?php
         },
-        'body' => function () {
+        'body' => function () use($dir, $files) {
 
             function formatBytes($bytes, $precision = 2) {
 
