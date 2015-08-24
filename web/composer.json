@@ -9,5 +9,13 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "nickolanack/Scaffolds": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:nickolanack/Scaffolds.git"
+        }
+    ]
 }
