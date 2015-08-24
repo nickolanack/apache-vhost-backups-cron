@@ -106,6 +106,7 @@ footer {
 	position: absolute;
 	bottom: 0;
 	margin: 0 10px;
+	width: calc(100% - 80px);
 }
 
 article>div, article h1 {
