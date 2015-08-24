@@ -137,13 +137,19 @@ article>div, article h1 {
                     'text' => array(
                         function () use($dir, $files) {
                             
-                            ?><ul><?php
+                            ?><table>
+	<tbody><?php
                             foreach ($files as $file) {
-                                ?><li><a
-		href="?download=<?php echo urlencode($file); ?> " target="_blank"><?php
-                                echo $file?></a> | <?php echo date('Y-m-d H:s:i', filectime($dir . DS . $file)); ?> | <?php echo formatBytes(filesize($dir . DS . $file)); ?></li><?php
+                                ?><tr>
+			<td><a href="?download=<?php echo urlencode($file); ?> "
+				target="_blank"><?php
+                                echo $file?></a></td>
+			<td> <?php echo date('Y-m-d H:s:i', filectime($dir . DS . $file)); ?></td>
+			<td> <?php echo formatBytes(filesize($dir . DS . $file)); ?></td>
+		</tr><?php
                             }
-                            ?></ul><?php
+                            ?></tbody>
+</table><?php
                         }
                     ),
                     'footer' => function () {
