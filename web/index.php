@@ -19,8 +19,8 @@ if (key_exists('download', $_GET) && in_array($_GET['download'], $files)) {
     $file = $dir . DS . $_GET['download'];
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $info = finfo_file($finfo, $file);
-    die(print_r($info, true));
-    header('Content-Type: image/png;');
+    // die(print_r($info, true));
+    header('Content-Type: ' . $info);
     readfile($file);
     return;
 }
