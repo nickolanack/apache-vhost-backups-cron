@@ -50,18 +50,23 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
             $config = json_decode(file_get_contents($configPath));
             
             chdir(dirname($vhostRoot));
-            $zip = 'host_backup_' . date('Y-M-D H:i') . '.zip';
+            $zipPrefix = 'host_backup_';
+            $zip = $zipPrefix . date('Y-M-D H:i') . '.zip';
             $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
             
             shell_exec_($zipCmd);
             
+            rollBackups($vhostRoot . '/' . $zipPrefix . '*', 2);
+            
             if (key_exists('database', $config)) {
                 $db = $config->database;
                 if (is_string($db)) {
-                    
-                    $sql = 'db_backup_' . date('Y-M-D H:i') . '.sql';
+                    $sqlPrefix = 'db_backup_';
+                    $sql = $sqlPrefix . date('Y-M-D H:i') . '.sql';
                     $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellcmd($sql);
                     shell_exec_($dbCmd);
+                    
+                    rollBackups($vhostRoot . '/' . $sqlPrefix . '*', 2);
                 }
             }
         } else {
