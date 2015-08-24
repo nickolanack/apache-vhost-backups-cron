@@ -7,6 +7,9 @@ $configFile = 'backup.json';
 global $dryrun;
 $dryrun = true;
 
+global $dryroll;
+$dryroll = true;
+
 function shell_exec_($cmd) {
 
     global $dryrun;
@@ -31,12 +34,21 @@ function rollBackups($name, $num = 2) {
     usort($roll, function ($a, $b) {
         return filectime($b) - filectime($a);
     });
+    
+    global $dryroll;
+    global $dryrun;
+    
+    $dryrunTemp = $dryrun;
+    $dryrun = ($dryroll || $dryrun);
+    // added the ability to dryrun just the roll function //restores $dryrun after running shell_exec_
+    
     if (count($roll) > $num) {
         foreach (array_slice($roll, $num) as $old) {
             $rmCmd = 'rm \'' . $old . '\' -r -f';
             shell_exec_($rmCmd);
         }
     }
+    $dryrun = $dryrunTemp;
 }
 
 $lsVhostsCmd = 'ls -1 ' . $webRoot;
