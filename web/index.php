@@ -73,6 +73,7 @@ body:before {
 	font-family: sans-serif;
 	font-weight: 100;
 	font-size: 30px;
+	color: royalblue;
 }
 
 body:after {
@@ -115,6 +116,10 @@ article>div, article h1 {
 
 td {
 	padding-right: 50px;
+}
+
+a {
+	color: royalblue;
 }
 </style>
 <?php
