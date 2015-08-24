@@ -25,7 +25,9 @@ if (key_exists('download', $_GET) && in_array($_GET['download'], $files)) {
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $info = finfo_file($finfo, $file);
     // die(print_r($info, true));
-    header('Content-Type: ' . $info);
+    
+    header('Content-Type: ' . trim($info));
+    header('Content-Disposition: attachment; filename=' . addcslashes($file, '"\\'));
     readfile($file);
     return;
 }
