@@ -1,6 +1,6 @@
 #! /usr/bin/php
 <?PHP
-$webRoot = '/srv/www/vhosts/production/';
+$webRoot = '/srv/www/vhosts/production';
 $webDir = 'http';
 $configFile = 'backup.json';
 
@@ -62,9 +62,9 @@ $vhostDocumentRoots = explode("\n", trim(shell_exec($lsVhostsCmd)));
 echo 'Scanning ' . count($vhostDocumentRoots) . ' Vhosts' . "\n";
 $countNoConfigs = 0;
 $countTasks = 0;
-foreach ($vhostDocumentRoots as $vhostRoot) {
+foreach ($vhostDocumentRoots as $vhostFolder) {
     
-    $vhostRoot = $webRoot . trim($vhostRoot);
+    $vhostRoot = $webRoot . '/' . trim($vhostFolder);
     $documentRoot = $vhostRoot . '/' . $webDir;
     $configPath = $vhostRoot . '/' . $configFile;
     
@@ -75,7 +75,7 @@ foreach ($vhostDocumentRoots as $vhostRoot) {
             
             $config = json_decode(file_get_contents($configPath));
             
-            chdir(dirname($vhostRoot));
+            chdir($vhostRoot);
             echo '   # (cd ' . getcwd() . ')';
             $zipPrefix = 'host_backup_';
             $zip = $zipPrefix . date('Y-M-D H:i') . '.zip';
