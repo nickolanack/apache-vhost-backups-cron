@@ -4,7 +4,7 @@
  * simple html page to display backup files, and allow downloads.
  * this should be proctected by basic auth.
  */
-include_once __DIR__ . '/vendor/nickolanack/scaffolds/defines.php';
+include_once __DIR__ . '/vendor/nickolanack/scaffolds/scaffolds/defines.php';
 
 HTML('document', 
     array(
