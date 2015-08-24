@@ -94,6 +94,9 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
                 }
                 if (is_string($exclude)) {
                     $zipCmd .= ' -x ' . $exclude;
+                } else {
+                    echo 'Expected String or Array for key: `exclude` in backup.json' . "\n";
+                    continue;
                 }
             }
             
