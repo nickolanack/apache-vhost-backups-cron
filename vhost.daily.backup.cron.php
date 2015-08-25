@@ -145,8 +145,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
             echo '   archiving folder `' . $webDir . '` -> ' . $zip . "\n";
             $time = microtime(true);
             shell_exec_($zipCmd);
-            echo '   ' . round(microtime(true) - $time, 2) . 's ' . formatBytes(filesize($zip));
-            
+            echo '   ' . round(microtime(true) - $time, 2) . 's ' . formatBytes(filesize($zip)) . "\n";
             echo '   rolling backups like:  `' . $zipPrefix . '*' . '`' . "\n";
             rollBackups($vhostRoot . '/' . $zipPrefix . '*', 2);
             
@@ -159,7 +158,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
                     echo '   dumping database `' . $db . '` -> ' . $sql . "\n";
                     $time = microtime(true);
                     shell_exec_($dbCmd);
-                    echo '   ' . round(microtime(true) - $time, 2) . 's ' . formatBytes(filesize($sql));
+                    echo '   ' . round(microtime(true) - $time, 2) . 's ' . formatBytes(filesize($sql)) . "\n";
                     
                     echo '   rolling backups like:  `' . $sqlPrefix . '*' . '`' . "\n";
                     rollBackups($vhostRoot . '/' . $sqlPrefix . '*', 2);
