@@ -4,12 +4,23 @@ $webRoot = '/srv/www/vhosts/production';
 $webDir = 'http';
 $configFile = 'backup.json';
 
+// both of the following global variables should be set to false
+// for proper operation. $dryrun=true; will cause all shell functions
+// (other than ls) to be skipped (but printed to console)
+// $dryroll=true; will cause only the the roll function to be
+// skipped (while $dryrun=false;)
 global $dryrun;
 $dryrun = false;
 
 global $dryroll;
-$dryroll = true;
+$dryroll = false;
 
+/**
+ * wrapper for shell_exec, prints, the command and output
+ * or just the command when global $dryrun=true;
+ *
+ * @param string $cmd            
+ */
 function shell_exec_($cmd) {
 
     global $dryrun;
@@ -21,6 +32,14 @@ function shell_exec_($cmd) {
     }
 }
 
+/**
+ * removes the oldest files matching a name pattern, so that $num files remain.
+ *
+ * @param string $name
+ *            used in ls, (should be an absolute path) with filename pattern ending in *
+ * @param number $num
+ *            number of log files to keep
+ */
 function rollBackups($name, $num = 2) {
 
     $lsBackupsCmd = 'ls -tU1 ' . $name;
@@ -47,21 +66,25 @@ function rollBackups($name, $num = 2) {
         foreach (array_slice($roll, $num) as $old) {
             $rmCmd = '   # rm \'' . $old . '\' -r -f';
             
-            // shell_exec_($rmCmd);
-            if ($dryrun) {
-                echo '   - dryrun' . $rmCmd . "\n";
-            }
+            shell_exec_($rmCmd);
         }
     }
     $dryrun = $dryrunTemp;
 }
 
+/**
+ * Backup Script
+ */
+
 $lsVhostsCmd = 'ls -1 ' . $webRoot;
 echo '-> ' . $lsVhostsCmd . "\n";
 $vhostDocumentRoots = explode("\n", trim(shell_exec($lsVhostsCmd)));
 echo 'Scanning ' . count($vhostDocumentRoots) . ' Vhosts' . "\n";
+
 $countNoConfigs = 0;
 $countTasks = 0;
+$countErrors = 0;
+
 foreach ($vhostDocumentRoots as $vhostFolder) {
     
     $vhostRoot = $webRoot . '/' . trim($vhostFolder);
@@ -76,6 +99,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
             $config = json_decode(file_get_contents($configPath));
             if (!is_object($config)) {
                 echo 'Unable to read: ' . $configPath . "\n";
+                $countErrors ++;
                 continue;
             }
             
@@ -96,6 +120,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
                     $zipCmd .= ' -x ' . $exclude;
                 } else {
                     echo 'Expected String or Array for key: `exclude` in backup.json' . "\n";
+                    $countErrors ++;
                     continue;
                 }
             }
@@ -129,6 +154,11 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
 if ($countNoConfigs === count($vhostDocumentRoots)) {
     echo 'Did not find any backup.json files' . "\n";
 } else {
-    echo 'Done, backed up ' . $countTasks . ' vhost', ($countTasks == 1 ? '' : 's') . "\n";
+    if ($countErrors) {
+        echo 'Aborted ' . $countErrors . ' vhost', ($countErrors == 1 ? ' becuase of an error' : 's becuase of errors') .
+             "\n";
+    }
+    echo 'Backed up ' . $countTasks . ' vhost', ($countTasks == 1 ? '' : 's') . "\n";
 }
+echo 'Done' . "\n";
 
