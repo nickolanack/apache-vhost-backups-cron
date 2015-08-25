@@ -64,12 +64,29 @@ function rollBackups($name, $num = 2) {
     
     if (count($roll) > $num) {
         foreach (array_slice($roll, $num) as $old) {
-            $rmCmd = '   # rm \'' . $old . '\' -r -f';
-            
+            $rmCmd = 'rm \'' . $old . '\' -r -f';
             shell_exec_($rmCmd);
         }
     }
     $dryrun = $dryrunTemp;
+}
+
+/**
+ * bytes to human readable string
+ *
+ * @param int $bytes            
+ * @return string
+ */
+function formatBytes($bytes, $precision = 2) {
+
+    $unit = [
+        "B",
+        "KB",
+        "MB",
+        "GB"
+    ];
+    $exp = floor(log($bytes, 1024)) | 0;
+    return round($bytes / (pow(1024, $exp)), $precision) . $unit[$exp];
 }
 
 /**
@@ -109,7 +126,7 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
             $dateStr = date('Y-M-D H:i');
             
             $zip = $zipPrefix . $dateStr . '.zip';
-            $zipCmd = 'zip -r -p ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
+            $zipCmd = 'zip -r -p -q ' . escapeshellarg($zip) . ' ' . escapeshellarg($webDir);
             
             if (key_exists('exclude', $config)) {
                 $exclude = $config->exclude;
@@ -126,7 +143,9 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
             }
             
             echo '   archiving folder `' . $webDir . '` -> ' . $zip . "\n";
+            $time = microtime(true);
             shell_exec_($zipCmd);
+            echo '   ' . round(microtime(true) - $time, 2) . 's ' . formatBytes(filesize($zip));
             
             echo '   rolling backups like:  `' . $zipPrefix . '*' . '`' . "\n";
             rollBackups($vhostRoot . '/' . $zipPrefix . '*', 2);
@@ -138,7 +157,9 @@ foreach ($vhostDocumentRoots as $vhostFolder) {
                     $sql = $sqlPrefix . $dateStr . '.sql';
                     $dbCmd = 'mysqldump ' . escapeshellarg($db) . ' > ' . escapeshellarg($sql);
                     echo '   dumping database `' . $db . '` -> ' . $sql . "\n";
+                    $time = microtime(true);
                     shell_exec_($dbCmd);
+                    echo '   ' . round(microtime(true) - $time, 2) . 's ' . formatBytes(filesize($sql));
                     
                     echo '   rolling backups like:  `' . $sqlPrefix . '*' . '`' . "\n";
                     rollBackups($vhostRoot . '/' . $sqlPrefix . '*', 2);
